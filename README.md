@@ -13,6 +13,12 @@ docker compose up
 
 Open [http://localhost:3000](http://localhost:3000). Paste any Solidity contract and get researcher-level security findings.
 
+## Demo Video
+
+<a href="https://drive.google.com/file/d/1K2KFgjtw7vtB-aRj6h4yhZ4ANmoOXzEf/view?usp=sharing">
+  <img src="https://drive.google.com/thumbnail?id=1K2KFgjtw7vtB-aRj6h4yhZ4ANmoOXzEf&sz=w1000" width="700">
+</a>
+
 ## Architecture
 
 ![Project Screenshot](https://i.ibb.co/XrMMdLtT/Screenshot-2026-05-16-at-13-06-40.png)
