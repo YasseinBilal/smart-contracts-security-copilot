@@ -1,0 +1,51 @@
+[project]
+name = "smart-contracts-security-copilot-backend"
+version = "0.1.0"
+description = "Smart contract security AI copilot backend"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "pydantic>=2.8.0",
+    "pydantic-settings>=2.4.0",
+    "sqlalchemy>=2.0.35",
+    "asyncpg>=0.30.0",
+    "alembic>=1.13.0",
+    "pgvector>=0.3.6",
+    "openai>=1.50.0",
+    "langgraph>=0.2.50",
+    "langchain-core>=0.3.0",
+    "python-multipart>=0.0.12",
+    "httpx>=0.27.0",
+    "python-dotenv>=1.0.1",
+    "slither-analyzer>=0.10.4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-mock>=3.14.0",
+    "httpx>=0.27.0",
+    "ruff>=0.6.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-mock>=3.14.0",
+    "ruff>=0.6.0",
+]
