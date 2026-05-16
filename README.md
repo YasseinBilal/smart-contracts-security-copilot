@@ -33,7 +33,6 @@ Open [http://localhost:3000](http://localhost:3000). Paste any Solidity contract
 | **Vulnerability Memory**      | pgvector knowledge base seeded with SWC Registry + Rekt.news post-mortems                                                      |
 | **Test Generation**           | Foundry test stubs for each CRITICAL/HIGH finding                                                                              |
 | **Code Explanations**         | Plain-English contract summary: what it does, who can call what, trust model                                                   |
-| **GitHub PR Integration**     | Webhook → automated PR review comments with severity-formatted findings                                                        |
 | **Eval Dashboard**            | Latency per LangGraph node, false-positive rate, token usage per scan                                                          |
 
 ## Vulnerability Coverage
