@@ -1,0 +1,77 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker compose *)",
+      "Bash(docker *)",
+      "Bash(uv *)",
+      "Bash(pnpm *)",
+      "Bash(pytest *)",
+      "Bash(ruff *)",
+      "Bash(alembic *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git checkout *)",
+      "Bash(git branch *)",
+      "Bash(find *)",
+      "Bash(grep *)",
+      "Bash(ls *)",
+      "Bash(mkdir *)",
+      "Bash(cat *)",
+      "Bash(echo *)",
+      "Bash(python *)",
+      "Bash(slither *)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(git push --force*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -f*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'f=\"${CLAUDE_TOOL_RESULT:-}\"; if [[ -z \"$f\" ]]; then exit 0; fi; if [[ \"$f\" == *.py ]]; then ruff format \"$f\" 2>/dev/null; ruff check --fix --unsafe-fixes \"$f\" 2>/dev/null; fi'"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'cmd=\"${CLAUDE_TOOL_INPUT_COMMAND:-}\"; if echo \"$cmd\" | grep -qE \"(rm -rf|git push --force|git reset --hard|git clean -f)\"; then echo \"BLOCKED: destructive operation not allowed\" >&2; exit 1; fi'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'cd /Users/yassin/Documents/smart-contracts-security-copilot && echo \"\\n=== Session ended: $(date) ===\" >> .claude/session-summaries.log; git diff --stat HEAD 2>/dev/null >> .claude/session-summaries.log || true'"
+          }
+        ]
+      }
+    ]
+  },
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      }
+    }
+  }
+}
