@@ -15,29 +15,7 @@ Open [http://localhost:3000](http://localhost:3000). Paste any Solidity contract
 
 ## Architecture
 
-```
-                        Solidity Source
-                              │
-                              ▼
-                    [FastAPI] POST /api/analyze
-                              │
-                              ▼
-              ┌───── LangGraph 7-Node Workflow ──────┐
-              │  1. parse         → Slither AST       │
-              │  2. static_scan   → Pattern detectors │
-              │  3. memory_query  → pgvector RAG      │
-              │  4. ai_reason     → GPT-4o enrichment │
-              │  5. test_gen      → Foundry test stubs│
-              │  6. explain       → Plain-English      │
-              │  7. report        → DB persistence    │
-              └───────────────────────────────────────┘
-                              │
-                              ▼
-              [PostgreSQL 16 + pgvector]  ←── Vulnerability Knowledge Base
-                              │                 (SWC Registry + Rekt.news)
-                              ▼
-              [React Dashboard]  — findings · eval metrics · code viewer
-```
+![Project Screenshot](https://i.ibb.co/XrMMdLtT/Screenshot-2026-05-16-at-13-06-40.png)
 
 ## Features
 
