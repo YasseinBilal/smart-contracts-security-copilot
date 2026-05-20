@@ -19,10 +19,6 @@ Open [http://localhost:3000](http://localhost:3000). Paste any Solidity contract
   <img src="https://drive.google.com/thumbnail?id=1K2KFgjtw7vtB-aRj6h4yhZ4ANmoOXzEf&sz=w1000" width="700">
 </a>
 
-## Architecture
-
-![Project Screenshot](https://i.ibb.co/XrMMdLtT/Screenshot-2026-05-16-at-13-06-40.png)
-
 ## Features
 
 | Feature                       | Description                                                                                                                    |
