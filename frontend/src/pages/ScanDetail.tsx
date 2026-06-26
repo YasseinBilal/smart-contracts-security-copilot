@@ -51,36 +51,6 @@ export function ScanDetail() {
       </div>
 
       {/* Latency breakdown */}
-      {Object.keys(latencies).length > 0 && (
-        <div className="bg-[#161b22] border border-[#30363d] rounded-lg p-4">
-          <p className="text-[#8b949e] text-xs uppercase tracking-wider mb-3">Node Latencies</p>
-          {(() => {
-            const max = Math.max(...Object.values(latencies).map(Number), 0.001)
-            return (
-              <div className="space-y-2">
-                {Object.entries(latencies).map(([node, lat]) => {
-                  const pct = Math.round((Number(lat) / max) * 100)
-                  return (
-                    <div key={node} className="flex items-center gap-3 text-xs">
-                      <span className="text-[#8b949e] w-28 shrink-0">{node}</span>
-                      <div className="flex-1 bg-[#0d1117] rounded-sm h-1.5">
-                        <div
-                          className="bg-[#1f6feb] h-1.5 rounded-sm"
-                          style={{ width: `${Math.max(pct, 1)}%` }}
-                        />
-                      </div>
-                      <span className="text-[#c9d1d9] font-mono w-14 text-right shrink-0">
-                        {Number(lat).toFixed(2)}s
-                      </span>
-                    </div>
-                  )
-                })}
-              </div>
-            )
-          })()}
-        </div>
-      )}
-
       {/* Filter */}
       <div className="flex gap-2 flex-wrap">
         {severities.map((s) => (
