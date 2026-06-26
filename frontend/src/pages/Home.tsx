@@ -116,7 +116,8 @@ export function Home() {
         setScanId(scanIdVal)
         setCompletedStages(STAGES_ORDER)
         setCurrentStage(null)
-        setRunning(false)
+        // Brief pause so user sees all-green before overlay fades out
+        setTimeout(() => setRunning(false), 1000)
       } else if (stage === 'error') {
         setError(event.message as string)
         setRunning(false)
@@ -200,16 +201,14 @@ export function Home() {
         />
       </div>
 
-      {/* Progress — stays visible on error so the message shows */}
-      {(running || error) && (
-        <div className="bg-[#161b22] border border-[#30363d] rounded-lg p-4">
-          <ScanProgress
-            currentStage={currentStage}
-            completedStages={completedStages}
-            error={error}
-          />
-        </div>
-      )}
+      {/* Overlay pipeline progress */}
+      <ScanProgress
+        open={running || !!error}
+        currentStage={currentStage}
+        completedStages={completedStages}
+        error={error}
+        onClose={() => setError(null)}
+      />
 
       {/* Results */}
       {findings.length > 0 && (
