@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ChevronDown, ChevronRight, Code2, FlaskConical } from 'lucide-react'
+import { ChevronDown, ChevronRight, Code2, FlaskConical, ShieldCheck } from 'lucide-react'
 import type { Finding } from '../api/client'
 import { SeverityBadge } from './SeverityBadge'
 
@@ -9,7 +9,7 @@ interface Props {
 
 export function FindingCard({ finding }: Props) {
   const [open, setOpen] = useState(false)
-  const [tab, setTab] = useState<'details' | 'code' | 'test'>('details')
+  const [tab, setTab] = useState<'details' | 'code' | 'test' | 'cvl'>('details')
 
   return (
     <div className="border border-[#30363d] rounded-lg bg-[#161b22] overflow-hidden">
@@ -29,7 +29,7 @@ export function FindingCard({ finding }: Props) {
       {open && (
         <div className="border-t border-[#30363d]">
           <div className="flex gap-1 px-4 pt-3">
-            {(['details', 'code', 'test'] as const).map((t) => (
+            {(['details', 'code', 'test', 'cvl'] as const).map((t) => (
               <button
                 key={t}
                 onClick={() => setTab(t)}
@@ -39,7 +39,7 @@ export function FindingCard({ finding }: Props) {
                     : 'text-[#8b949e] hover:text-[#c9d1d9]'
                 }`}
               >
-                {t === 'details' ? 'Details' : t === 'code' ? 'Code' : 'Test Stub'}
+                {t === 'details' ? 'Details' : t === 'code' ? 'Code' : t === 'test' ? 'Test Stub' : 'CVL Property'}
               </button>
             ))}
           </div>
@@ -83,6 +83,21 @@ export function FindingCard({ finding }: Props) {
                   </pre>
                 ) : (
                   <p className="text-[#8b949e] text-sm">No test stub generated (only generated for CRITICAL/HIGH findings).</p>
+                )}
+              </div>
+            )}
+
+            {tab === 'cvl' && (
+              <div>
+                {finding.cvl_property ? (
+                  <>
+                    <p className="text-[#8b949e] text-xs mb-2">Certora CVL — paste into a <code className="text-[#c9d1d9]">.spec</code> file and run with the Prover</p>
+                    <pre className="bg-[#0d1117] border border-[#30363d] rounded p-3 overflow-x-auto text-xs text-[#c9d1d9] leading-relaxed">
+                      {finding.cvl_property}
+                    </pre>
+                  </>
+                ) : (
+                  <p className="text-[#8b949e] text-sm">No CVL property generated (only generated for CRITICAL/HIGH findings).</p>
                 )}
               </div>
             )}

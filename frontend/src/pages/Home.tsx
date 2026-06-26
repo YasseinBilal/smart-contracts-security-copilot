@@ -94,7 +94,7 @@ export function Home() {
     }
   }
 
-  const STAGES_ORDER = ['parsing', 'static_scan', 'memory_query', 'ai_reasoning', 'test_gen', 'explain']
+  const STAGES_ORDER = ['parsing', 'static_scan', 'memory_query', 'ai_reasoning', 'test_gen', 'property_gen', 'explain']
 
   const handleAnalyze = useCallback(() => {
     if (!source.trim()) return

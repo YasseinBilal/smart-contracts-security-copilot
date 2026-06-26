@@ -6,6 +6,7 @@ const STAGES = [
   { key: 'memory_query', label: 'Searching exploit knowledge base' },
   { key: 'ai_reasoning', label: 'GPT-4o reasoning over findings' },
   { key: 'test_gen', label: 'Generating Foundry test stubs' },
+  { key: 'property_gen', label: 'Generating Certora CVL property stubs' },
   { key: 'explain', label: 'Building plain-English explanation' },
 ]
 

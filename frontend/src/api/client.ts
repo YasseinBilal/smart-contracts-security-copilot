@@ -13,6 +13,7 @@ export interface Finding {
   recommendation: string
   exploit_scenario: string
   test_stub: string | null
+  cvl_property: string | null
   false_positive: boolean
   confidence: string
 }
