@@ -45,6 +45,48 @@ contract ProtectedWithRequire {
 """
 
 
+WITHDRAW_WITH_BALANCE_CHECK_SOURCE = """
+pragma solidity ^0.8.0;
+
+contract VulnerableVault {
+    mapping(address => uint256) public balances;
+    address public owner;
+
+    constructor() { owner = msg.sender; }
+
+    function deposit() public payable {
+        balances[msg.sender] += msg.value;
+    }
+
+    function withdraw(uint256 amount) public {
+        require(balances[msg.sender] >= amount, "Insufficient balance");
+        (bool sent, ) = msg.sender.call{value: amount}("");
+        require(sent, "Transfer failed");
+        balances[msg.sender] -= amount;
+    }
+
+    // This one IS unprotected and has no per-user guard
+    function emergencyWithdraw() public {
+        payable(msg.sender).transfer(address(this).balance);
+    }
+}
+"""
+
+
+def test_no_false_positive_user_withdraw_with_balance_check():
+    detector = AccessControlDetector()
+    findings = detector.detect(WITHDRAW_WITH_BALANCE_CHECK_SOURCE, "VulnerableVault.sol")
+    titles = [f.title for f in findings]
+    # withdraw() is user-facing (guarded by balances[msg.sender]) — must NOT be flagged
+    assert not any("withdraw()" in t for t in titles), (
+        f"withdraw() with balance check was incorrectly flagged: {titles}"
+    )
+    # emergencyWithdraw() has no user-balance guard — must still be flagged
+    assert any("emergencyWithdraw" in t for t in titles), (
+        f"emergencyWithdraw() was not flagged: {titles}"
+    )
+
+
 def test_detects_unprotected_mint():
     detector = AccessControlDetector()
     findings = detector.detect(VULNERABLE_SOURCE, "UnprotectedMint.sol")

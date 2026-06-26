@@ -19,6 +19,11 @@ _ACCESS_GUARD = re.compile(
     r"|require\s*\(\s*_msgSender\s*\(\s*\)\s*==",
     re.IGNORECASE,
 )
+# withdraw/withdrawAll are user-facing when they gate on the caller's own balance.
+# emergencyWithdraw and drain are always admin-only (drain the whole vault).
+_USER_WITHDRAW_NAMES = re.compile(r"\bfunction\s+(withdraw|withdrawAll)\s*\(", re.IGNORECASE)
+# Matches per-caller balance checks: balances[msg.sender], _balances[msg.sender], etc.
+_USER_BALANCE_GUARD = re.compile(r"\b\w*[Bb]alances?\s*\[\s*msg\.sender\s*\]", re.IGNORECASE)
 _FUNCTION_START = re.compile(r"\bfunction\s+(\w+)")
 _VISIBILITY = re.compile(r"\b(public|external)\b")
 
@@ -61,6 +66,17 @@ class AccessControlDetector(Detector):
                     break
             if guarded:
                 continue
+
+            # withdraw/withdrawAll with a per-caller balance check are user-facing,
+            # not privileged admin functions — skip to avoid false positives.
+            if _USER_WITHDRAW_NAMES.search(line):
+                user_guarded = False
+                for j in range(body_start, min(body_start + 10, len(lines))):
+                    if _USER_BALANCE_GUARD.search(lines[j]):
+                        user_guarded = True
+                        break
+                if user_guarded:
+                    continue
 
             findings.append(
                 StaticFinding(
