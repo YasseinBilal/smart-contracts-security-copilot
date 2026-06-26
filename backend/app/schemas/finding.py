@@ -14,6 +14,7 @@ class FindingSchema(BaseModel):
     recommendation: str
     exploit_scenario: str
     test_stub: str | None
+    cvl_property: str | None = None
     false_positive: bool
     confidence: str
 

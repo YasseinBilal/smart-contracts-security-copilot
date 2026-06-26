@@ -6,6 +6,7 @@ from app.agents.nodes.static_scan import static_scan_node
 from app.agents.nodes.memory_query import memory_query_node
 from app.agents.nodes.ai_reason import ai_reason_node
 from app.agents.nodes.test_gen import test_gen_node
+from app.agents.nodes.property_gen import property_gen_node
 from app.agents.nodes.explain import explain_node
 from app.agents.nodes.report import report_node
 
@@ -18,6 +19,7 @@ def build_audit_graph() -> StateGraph:
     graph.add_node("memory_query", memory_query_node)
     graph.add_node("ai_reason", ai_reason_node)
     graph.add_node("test_gen", test_gen_node)
+    graph.add_node("property_gen", property_gen_node)
     graph.add_node("explain", explain_node)
     graph.add_node("report", report_node)
 
@@ -26,7 +28,8 @@ def build_audit_graph() -> StateGraph:
     graph.add_edge("static_scan", "memory_query")
     graph.add_edge("memory_query", "ai_reason")
     graph.add_edge("ai_reason", "test_gen")
-    graph.add_edge("test_gen", "explain")
+    graph.add_edge("test_gen", "property_gen")
+    graph.add_edge("property_gen", "explain")
     graph.add_edge("explain", "report")
     graph.add_edge("report", END)
 

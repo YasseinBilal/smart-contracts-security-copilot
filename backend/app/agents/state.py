@@ -29,10 +29,14 @@ class AuditState(TypedDict, total=False):
     test_stubs: dict[str, str]
     test_gen_latency: float
 
-    # Node 6: explain
+    # Node 6: property_gen
+    cvl_properties: dict[str, str]
+    property_gen_latency: float
+
+    # Node 7: explain
     explanation: dict
     explain_latency: float
 
-    # Node 7: report
+    # Node 8: report
     report: dict
     report_latency: float

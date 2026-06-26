@@ -20,6 +20,7 @@ class Finding(Base):
     recommendation: Mapped[str] = mapped_column(Text, nullable=False, default="")
     exploit_scenario: Mapped[str] = mapped_column(Text, nullable=False, default="")
     test_stub: Mapped[str | None] = mapped_column(Text, nullable=True)
+    cvl_property: Mapped[str | None] = mapped_column(Text, nullable=True)
     false_positive: Mapped[bool] = mapped_column(Boolean, default=False)
     confidence: Mapped[str] = mapped_column(String, nullable=False, default="MEDIUM")
 
