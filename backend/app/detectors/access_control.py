@@ -5,10 +5,13 @@ from app.detectors.base import Detector, StaticFinding
 # Functions with privileged names that should require access control
 _PRIVILEGED_NAMES = re.compile(
     r"\bfunction\s+(mint|burn|pause|unpause|initialize|setOwner|transferOwnership|"
-    r"upgrade|upgradeTo|withdraw|withdrawAll|setFee|setPrice|addAdmin|removeAdmin|"
+    r"upgrade|upgradeTo|withdraw|withdrawAll|addAdmin|removeAdmin|"
     r"emergencyWithdraw|drain)\s*\(",
     re.IGNORECASE,
 )
+# camelCase set* functions (setPaused, setFee, setPrice, setRate, setOracle, etc.)
+# Case-sensitive so we don't match 'settings', 'setup', 'setter', etc.
+_PRIVILEGED_SETTERS = re.compile(r"\bfunction\s+(set[A-Z]\w*)\s*\(")
 # Access control modifiers / checks.
 # Word-bounded alternatives (end in word chars) are grouped separately from
 # require(msg.sender ==) which ends in '==' and cannot use a trailing \b.
@@ -36,8 +39,7 @@ class AccessControlDetector(Detector):
         lines = source.splitlines()
 
         for i, line in enumerate(lines, start=1):
-            m = _PRIVILEGED_NAMES.search(line)
-            if not m:
+            if not (_PRIVILEGED_NAMES.search(line) or _PRIVILEGED_SETTERS.search(line)):
                 continue
 
             func_name_match = _FUNCTION_START.search(line)

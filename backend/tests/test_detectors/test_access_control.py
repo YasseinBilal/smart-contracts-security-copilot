@@ -51,6 +51,7 @@ pragma solidity ^0.8.0;
 contract VulnerableVault {
     mapping(address => uint256) public balances;
     address public owner;
+    bool public paused;
 
     constructor() { owner = msg.sender; }
 
@@ -65,7 +66,10 @@ contract VulnerableVault {
         balances[msg.sender] -= amount;
     }
 
-    // This one IS unprotected and has no per-user guard
+    function setPaused(bool _paused) public {
+        paused = _paused;
+    }
+
     function emergencyWithdraw() public {
         payable(msg.sender).transfer(address(this).balance);
     }
@@ -80,6 +84,10 @@ def test_no_false_positive_user_withdraw_with_balance_check():
     # withdraw() is user-facing (guarded by balances[msg.sender]) — must NOT be flagged
     assert not any("withdraw()" in t for t in titles), (
         f"withdraw() with balance check was incorrectly flagged: {titles}"
+    )
+    # setPaused() changes global state — must be flagged
+    assert any("setPaused" in t for t in titles), (
+        f"setPaused() was not flagged: {titles}"
     )
     # emergencyWithdraw() has no user-balance guard — must still be flagged
     assert any("emergencyWithdraw" in t for t in titles), (
