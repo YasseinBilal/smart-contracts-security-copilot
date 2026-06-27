@@ -7,54 +7,6 @@ import { FindingCard } from '../components/FindingCard'
 import { SeverityBadge } from '../components/SeverityBadge'
 import type { Finding } from '../api/client'
 
-const EXAMPLE_CONTRACT = `// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-/// @notice Deliberately vulnerable ETH vault — reentrancy + unprotected admin
-/// Mimics The DAO hack pattern ($60M, 2016)
-contract VulnerableVault {
-    mapping(address => uint256) public balances;
-    address public owner;
-    bool public paused;
-
-    event Deposit(address indexed user, uint256 amount);
-    event Withdrawal(address indexed user, uint256 amount);
-
-    constructor() {
-        owner = msg.sender;
-    }
-
-    function deposit() public payable {
-        require(!paused, "Paused");
-        balances[msg.sender] += msg.value;
-        emit Deposit(msg.sender, msg.value);
-    }
-
-    // VULNERABILITY: CEI violation — external call before state update
-    function withdraw(uint256 amount) public {
-        require(balances[msg.sender] >= amount, "Insufficient balance");
-        require(!paused, "Paused");
-
-        (bool sent, ) = msg.sender.call{value: amount}("");
-        require(sent, "Transfer failed");
-
-        balances[msg.sender] -= amount; // state update too late
-        emit Withdrawal(msg.sender, amount);
-    }
-
-    // VULNERABILITY: no access control — anyone can pause or drain
-    function setPaused(bool _paused) public {
-        paused = _paused;
-    }
-
-    function emergencyWithdraw() public {
-        payable(msg.sender).transfer(address(this).balance);
-    }
-
-    function getBalance() public view returns (uint256) {
-        return address(this).balance;
-    }
-}`
 
 function githubToRaw(url: string): string | null {
   const m = url.match(/^https?:\/\/github\.com\/([^/]+\/[^/]+)\/blob\/(.+)$/)
@@ -65,8 +17,8 @@ function githubToRaw(url: string): string | null {
 export function Home() {
   const [githubUrl, setGithubUrl] = useState('')
   const [fetchingUrl, setFetchingUrl] = useState(false)
-  const [source, setSource] = useState(EXAMPLE_CONTRACT)
-  const [filename, setFilename] = useState('VulnerableVault.sol')
+  const [source, setSource] = useState('')
+  const [filename, setFilename] = useState('contract.sol')
   const [running, setRunning] = useState(false)
   const [currentStage, setCurrentStage] = useState<string | null>(null)
   const [completedStages, setCompletedStages] = useState<string[]>([])
