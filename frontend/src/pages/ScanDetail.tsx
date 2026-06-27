@@ -30,11 +30,6 @@ export function ScanDetail() {
     <div className="max-w-5xl mx-auto px-6 py-8 space-y-6">
       <div>
         <h1 className="text-xl font-semibold text-[#c9d1d9]">{scan.filename || 'Scan Detail'}</h1>
-        <div className="flex gap-4 text-xs text-[#8b949e] mt-1">
-          <span>Triggered by: {scan.triggered_by}</span>
-          <span>{new Date(scan.created_at).toLocaleString()}</span>
-          <span>Tokens: {scan.total_tokens.toLocaleString()}</span>
-        </div>
       </div>
 
       {/* Summary cards */}
