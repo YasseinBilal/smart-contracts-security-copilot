@@ -102,9 +102,19 @@ async def _persist(
             index_elements=["id"],
             set_={
                 "scan_id": scan_id,
+                "filename": state.get("filename", ""),
+                "category": f.get("category", ""),
                 "severity": f.get("severity", "INFO"),
+                "title": f.get("title", ""),
+                "description": f.get("description", ""),
+                "affected_lines": f.get("affected_lines", []),
+                "affected_code": f.get("affected_code"),
+                "recommendation": f.get("recommendation", ""),
+                "exploit_scenario": f.get("exploit_scenario", ""),
                 "test_stub": stub,
                 "cvl_property": cvl_stub,
+                "false_positive": f.get("false_positive", False),
+                "confidence": f.get("confidence", "MEDIUM"),
             },
         )
         await db.execute(stmt)
